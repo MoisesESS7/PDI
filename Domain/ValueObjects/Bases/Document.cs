@@ -4,8 +4,8 @@ namespace Domain.ValueObjects.Bases
 {
     public abstract class Document
     {
-        public string Number { get; set; }
-        public DateTime BirthDate { get; set; }
+        public string Number { get; private set; }
+        public DateTime BirthDate { get; private set; }
 
         protected Document(string number, DateTime birthDate)
         {
