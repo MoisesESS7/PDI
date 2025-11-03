@@ -1,11 +1,11 @@
 ﻿using Application.Interfaces.Repositories;
-using Infrastructure.Common;
-using Infrastructure.Data.Context;
+using Infrastructure.Data.Common;
+using Infrastructure.Data.Data.Context;
+using Infrastructure.Data.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Infrastructure.Repositories;
 
-namespace Infrastructure
+namespace Infrastructure.Ioc
 {
     public static class Bootstrapper
     {
