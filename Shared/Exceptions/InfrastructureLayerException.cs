@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Shared.Exceptions;
 
-namespace Infrastructure.Exceptions
+namespace Shared.Exceptions
 {
     public class InfrastructureLayerException : BaseAppException
     {

@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.Exceptions
+﻿using Shared.Exceptions;
+
+namespace Infrastructure.Exceptions
 {
     public class DatabaseWriteException : InfrastructureLayerException
     {

@@ -4,6 +4,7 @@ using Infrastructure.Exceptions;
 using Polly;
 using Polly.Retry;
 using Microsoft.Extensions.Logging;
+using Shared.Exceptions;
 
 namespace Infrastructure.Common
 {
