@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using Domain.Entities;
 
-namespace Infrastructure.Data.Indexes
+namespace Infrastructure.Data.Data.Indexes
 {
     public static class MongoIndexInitializer
     {

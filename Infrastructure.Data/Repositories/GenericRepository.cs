@@ -1,12 +1,12 @@
 ﻿using Application.Interfaces.Repositories;
 using Domain.Entities;
-using Infrastructure.Common;
-using Infrastructure.Data.Context;
-using Infrastructure.Exceptions;
+using Infrastructure.Data.Common;
+using Infrastructure.Data.Data.Context;
+using Infrastructure.Data.Exceptions;
 using MongoDB.Driver;
 using System.Linq.Expressions;
 
-namespace Infrastructure.Repositories
+namespace Infrastructure.Data.Repositories
 {
     public class GenericRepository<TEntity> : IRepository<TEntity> where TEntity : Entity<string>
     {
