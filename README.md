@@ -38,7 +38,7 @@ O projeto segue **Clean Architecture**, dividido em camadas:
 │   ├── Requests
 │   ├── Responses
 │   ├── Mappers
-│   ├── Tests
+│   └── Tests
 │       └── Requests
 │          └── Persons.http
 ├── Application
