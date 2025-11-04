@@ -59,9 +59,9 @@ O projeto segue **Clean Architecture**, dividido em camadas:
 │   ├── Common
 │   └── Exceptions
 ├── Shared
-│   ├── Enums
-│   ├── Exceptions
-│   └── Utils
+    ├── Enums
+    ├── Exceptions
+    └── Utils
 
 
 markdown
