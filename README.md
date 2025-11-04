@@ -58,7 +58,7 @@ O projeto segue **Clean Architecture**, dividido em camadas:
 │   ├── Repositories
 │   ├── Common
 │   └── Exceptions
-├── Shared
+└── Shared
     ├── Enums
     ├── Exceptions
     └── Utils
