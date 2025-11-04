@@ -1,3 +1,5 @@
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+
 # PDI - .NET API CRUD com MongoDB e GCP Pub/Sub
 
 ## Descrição
@@ -50,7 +52,7 @@ O projeto segue **Clean Architecture**, dividido em camadas:
 │   ├── Entities
 │   ├── ValueObjects
 │   └── Exceptions
-├── Infrastructure
+├── Infrastructure.Data
 │   ├── Data
 │   │   ├── Context
 │   │   ├── Extensions
@@ -58,6 +60,8 @@ O projeto segue **Clean Architecture**, dividido em camadas:
 │   ├── Repositories
 │   ├── Common
 │   └── Exceptions
+├── Infrastructure.Data
+│   └── Bootstrapper.cs
 └── Shared
     ├── Enums
     ├── Exceptions
