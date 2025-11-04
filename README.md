@@ -32,35 +32,37 @@ O sistema realiza operações CRUD para a entidade **Person**, aplicando **boas 
 
 O projeto segue **Clean Architecture**, dividido em camadas:
 
+```text
 ├── Api
-│ ├── Controllers
-│ ├── Requests
-│ ├── Responses
-│ └── Mappers
+│   ├── Controllers
+│   ├── Requests
+│   ├── Responses
+│   ├── Mappers
+│   ├── Tests
+│       └── Requests
+│          └── Persons.http
 ├── Application
-│ ├── Commands
-│ ├── Interfaces
-│ ├── Services
-│ └── Mappers
+│   ├── Commands
+│   ├── Interfaces
+│   ├── Services
+│   └── Mappers
 ├── Domain
-│ ├── Entities
-│ ├── ValueObjects
-│ └── Exceptions
+│   ├── Entities
+│   ├── ValueObjects
+│   └── Exceptions
 ├── Infrastructure
-│ ├── Data
-│ │ ├── Context
-│ │ ├── Extensions
-│ │ └── Indexes
-│ ├── Repositories
-│ ├── Common
-│ └── Exceptions
+│   ├── Data
+│   │   ├── Context
+│   │   ├── Extensions
+│   │   └── Indexes
+│   ├── Repositories
+│   ├── Common
+│   └── Exceptions
 ├── Shared
-│ ├── Enums
-│ ├── Exceptions
-│ └── Utils
-└── Tests
-└── Requests
-└── Persons.http
+│   ├── Enums
+│   ├── Exceptions
+│   └── Utils
+
 
 markdown
 Copiar código
