@@ -60,7 +60,7 @@ O projeto segue **Clean Architecture**, dividido em camadas:
 │   ├── Repositories
 │   ├── Common
 │   └── Exceptions
-├── Infrastructure.Data
+├── Infrastructure.Ioc
 │   └── Bootstrapper.cs
 └── Shared
     ├── Enums
