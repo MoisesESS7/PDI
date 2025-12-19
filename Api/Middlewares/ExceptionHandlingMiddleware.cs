@@ -2,7 +2,7 @@
 using Application.Exceptions;
 using Domain.Exceptions;
 using Shared.Exceptions;
-using Shared.Utils;
+using Api.Utils;
 
 namespace Api.Middlewares
 {
