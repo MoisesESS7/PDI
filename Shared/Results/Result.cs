@@ -4,15 +4,16 @@
     {
         public bool IsSuccess { get; }
         public bool IsFailure => !IsSuccess;
-        public Error? Error { get; }
+        public IReadOnlyCollection<Error> Errors { get; }
 
-        public Result(bool isSuccess, Error? error)
+        public Result(bool isSuccess, IReadOnlyCollection<Error> errors)
         {
             IsSuccess = isSuccess;
-            Error = error;
+            Errors = errors;
         }
 
-        public static Result Ok() => new (true, null);
-        public static Result Fail(Error error) => new (false, error);
+        public static Result Ok() => new(true, []);
+        public static Result Fail(Error error) => new(false, [error]);
+        public static Result Fail(IEnumerable<Error> errors) => new(false, [.. errors]);
     }
 }
