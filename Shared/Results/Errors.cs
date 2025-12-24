@@ -10,7 +10,7 @@
 
         public static class Cpf
         {
-            public static Error DuplicateNumber => new("Cpf.Conflict", "There is already a CPF with that number.", ErrorType.NotFound);
+            public static Error DuplicateNumber => new("Cpf.Conflict", "There is already a CPF with that number.", ErrorType.Conflict);
         }
         
         public static class Rg
