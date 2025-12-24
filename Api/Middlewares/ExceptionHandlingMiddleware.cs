@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Api.Middlewares
 {
-    public class ExceptionHandlingMiddleware
+    public sealed class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
