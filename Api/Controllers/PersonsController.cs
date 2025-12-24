@@ -1,5 +1,4 @@
 using Api.Builders;
-using Api.Extensions;
 using Api.Models;
 using Api.Requests.Persons;
 using Application.Commands.Persons;
@@ -13,7 +12,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PersonsController : ControllerBase
+    public class PersonsController : ApiControllerBase
     {
         private readonly ILogger<PersonsController> _logger;
         private readonly ILinkBuilder _linkBuilder;
@@ -39,7 +38,7 @@ namespace Api.Controllers
             var result = await _personService.GetAsync(id);
 
             if (result.IsFailure)
-                return result.ToActionResult();
+                return ToActionResult(result);
 
             var response = _mapper.Map<ApiPersonResponse>(result.Value);
 
@@ -64,7 +63,7 @@ namespace Api.Controllers
             var result = await _personService.SearchPagedAsync(searchParams);
 
             if (result.IsFailure)
-                return result.ToActionResult();
+                return ToActionResult(result);
             
             var response = _mapper.Map<PagedResponse<ApiPersonResponse>>(result.Value);
 
@@ -96,7 +95,7 @@ namespace Api.Controllers
             var result = await _personService.CreateAsync(command);
 
             if (result.IsFailure)
-                return result.ToActionResult();
+                return ToActionResult(result);
 
             var response = _mapper.Map<ApiPersonResponse>(result.Value);
 
@@ -120,7 +119,7 @@ namespace Api.Controllers
             var result = await _personService.UpdateAsync(command);
 
             if (result.IsFailure)
-                return result.ToActionResult();
+                return ToActionResult(result);
 
             var response = _mapper.Map<ApiPersonResponse>(result.Value);
 
@@ -135,7 +134,7 @@ namespace Api.Controllers
             var result = await _personService.DeleteAsync(id);
 
             if (result.IsFailure)
-                return result.ToActionResult();
+                return ToActionResult(result);
 
             _logger.LogInformation("Person with ID {Id} deleted successfully.", id);
             return NoContent();
