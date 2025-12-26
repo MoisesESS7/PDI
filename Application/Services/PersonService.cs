@@ -1,12 +1,12 @@
 ﻿using Application.Commands.Persons;
 using Application.Common.Models;
 using Application.Common.Response.Persons;
-using Application.Exceptions;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using Application.Mappers;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
+using Shared.Results;
 
 namespace Application.Services
 {
@@ -23,10 +23,9 @@ namespace Application.Services
             _personRepository = personRepository;
         }
 
-        public async Task<PagedResult<PersonResponse>> SearchPagedAsync(SearchParams searchParams, CancellationToken cancellationToken = default)
+        public async Task<ResultOfT<PagedResult<PersonResponse>>> SearchPagedAsync(SearchParams searchParams, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Getting all persons...");
-
             var totalRecords = await _personRepository.CountAsync(cancellationToken: cancellationToken);
 
             var pageMeta = new PageMeta(searchParams.PageNumber, searchParams.PageSize, totalRecords);
@@ -34,7 +33,7 @@ namespace Application.Services
             var persons = await _personRepository.SeachPagedAsync(searchParams, cancellationToken);
 
             var personList = Mapper.ToListPersonResponse(persons);
-            
+
             var paginationMeta = new PaginationMeta(pageMeta);
             var pagedResult = new PagedResult<PersonResponse>(personList, paginationMeta);
 
@@ -45,28 +44,28 @@ namespace Application.Services
                 pageMeta.TotalPages
             );
 
-            return pagedResult;
+            return ResultOfT<PagedResult<PersonResponse>>.Ok(pagedResult);
         }
 
-        public async Task<PersonResponse> GetAsync(string value, CancellationToken cancellationToken = default)
+        public async Task<ResultOfT<PersonResponse>> GetAsync(string value, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Getting person with Id: {Id}", value);
             var person = await _personRepository.GetAsync(p => p.Id == value, cancellationToken);
 
             if (person is null)
             {
-                _logger.LogWarning("Person with Id {Id} not found", value);
-                throw new ResourceNotFoundException(nameof(Person), value);
+                _logger.LogWarning("Person with Id {Id} was not found", value);
+                return ResultOfT<PersonResponse>.Fail(Errors.Person.NotFound);
             }
 
-            _logger.LogInformation("Person with Id {Id} found", value);
-            return Mapper.ToPersonResponse(person);
+            var personMapped = Mapper.ToPersonResponse(person);
+
+            _logger.LogInformation("Retreved person with Id: {Id}", value);
+            return ResultOfT<PersonResponse>.Ok(personMapped);
         }
 
-        public async Task<PersonResponse> CreateAsync(CreatePersonCommand command, CancellationToken cancellationToken = default)
+        public async Task<ResultOfT<PersonResponse>> CreateAsync(CreatePersonCommand command, CancellationToken cancellationToken = default)
         {
-            IList<string> errors = [];
-
             _logger.LogInformation("Creating a new person: {Name}", command.Name);
             var personFromDb = _personRepository
                 .AsQueryable()
@@ -83,55 +82,61 @@ namespace Application.Services
                 .FirstOrDefault();
 
             if (personFromDb?.Name == command.Name)
-                errors.Add($"There is already a person with that name");
+            {
+                _logger.LogWarning("There is already a person with that name: {Name}.", personFromDb.Name);
+                return ResultOfT<PersonResponse>.Fail(Errors.Person.DuplicateName);
+            }
 
             if (personFromDb?.Cpf == command.Cpf.Number)
-                errors.Add($"There is alread a CPF with that number");
+            {
+                _logger.LogWarning("There is already a CPF with that number: {Number}.", personFromDb.Cpf);
+                return ResultOfT<PersonResponse>.Fail(Errors.Cpf.DuplicateNumber);
+            }
 
             if (personFromDb?.Rg == command.Rg.Number)
-                errors.Add($"There is already a RG with that number");
-
-            if (errors.Count > 0)
             {
-                _logger.LogWarning("Failed to create person {Name}. Errors: {Errors}", command.Name, string.Join(", ", errors));
-                throw new ResourceAlreadyExistsException(errors, nameof(Person));
+                _logger.LogWarning("There is already a RG with that number: {Number}.", personFromDb.Rg);
+                return ResultOfT<PersonResponse>.Fail(Errors.Rg.DuplicateNumber);
             }
 
             var person = Mapper.ToPersonDomain(command);
+
             var personCreated = await _personRepository.CreateAsync(person, cancellationToken);
+
+            var personMapped = Mapper.ToPersonResponse(personCreated);
+
             _logger.LogInformation("Person {Name} created successfully with Id {Id}", personCreated.Name, personCreated.Id);
-            return Mapper.ToPersonResponse(personCreated);
+            return ResultOfT<PersonResponse>.Ok(personMapped);
         }
 
-        public async Task<PersonResponse> UpdateAsync(UpdatePersonCommand command, CancellationToken cancellationToken = default)
+        public async Task<ResultOfT<PersonResponse>> UpdateAsync(UpdatePersonCommand command, CancellationToken cancellationToken = default)
         {
-            IList<string> errors = [];
-
             _logger.LogInformation("Updating person with Id: {Id}", command.Id);
             var person = await _personRepository.GetAsync(p => p.Id == command.Id, cancellationToken);
 
             if (person is null)
             {
                 _logger.LogWarning("Person with Id {Id} not found", command.Id);
-                throw new ResourceNotFoundException(nameof(Person), command.Id);
+                return ResultOfT<PersonResponse>.Fail(Errors.Person.NotFound);
             }
-
+            
             if (person.Name == command.Name)
-                errors.Add($"There is already a person with that name");
-
-            if (errors.Count > 0)
             {
-                _logger.LogWarning("Failed to update person with Id {Id}. Errors: {Errors}", command.Id, string.Join(", ", errors));
-                throw new ResourceAlreadyExistsException(errors, nameof(Person));
+                _logger.LogWarning("There is already a person with that name: {Name}.", person.Name);
+                return ResultOfT<PersonResponse>.Fail(Errors.Person.DuplicateName);
             }
 
             person.Update(command.Name);
+
             var personUpdated = await _personRepository.UpdateAsync(person, cancellationToken);
+
+            var personMapped = Mapper.ToPersonResponse(personUpdated);
+
             _logger.LogInformation("Person with Id {Id} updated successfully", command.Id);
-            return Mapper.ToPersonResponse(personUpdated);
+            return ResultOfT<PersonResponse>.Ok(personMapped);
         }
 
-        public async Task<bool> DeleteAsync(string value, CancellationToken cancellationToken = default)
+        public async Task<Result> DeleteAsync(string value, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Deleting person with Id: {Id}", value);
             var exists = await _personRepository.ExistsAsync(p => p.Id == value, cancellationToken);
@@ -139,12 +144,13 @@ namespace Application.Services
             if (!exists)
             {
                 _logger.LogWarning("Person with Id {Id} not found", value);
-                throw new ResourceNotFoundException(nameof(Person), value);
+                return Result.Fail(Errors.Person.NotFound);
             }
 
-            var isDeleted = await _personRepository.DeleteAsync(p => p.Id == value, cancellationToken);
+            await _personRepository.DeleteAsync(p => p.Id == value, cancellationToken);
+
             _logger.LogInformation("Person with Id {Id} deleted successfully", value);
-            return isDeleted;
+            return Result.Ok();
         }
     }
 }

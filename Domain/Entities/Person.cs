@@ -46,7 +46,7 @@ namespace Domain.Entities
         private void PartialValidation(List<string>? errors = default)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                errors?.Add("The name can be informed.");
+                throw new PersonValidationException(["The name can be informed."]);
             
             if (Name?.Length < 3)
                 errors?.Add("The name cannot be less then 3 characters.");
