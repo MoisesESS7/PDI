@@ -28,6 +28,9 @@ namespace Api.Mappers
                 .ConstructUsing(src => new ApiPersonResponse(
                         src.Id,
                         src.Name,
+                        src.Auditable.CreatedAt,
+                        src.Auditable.UpdatedAt,
+                        src.Auditable.DeletedAt,
                         src.Age,
                         src.Rg.BirthDate,
                         src.Cpf.Number,
@@ -42,6 +45,9 @@ namespace Api.Mappers
                         src.Data.Select(item => new ApiPersonResponse(
                             item.Id,
                             item.Name,
+                            item.Auditable.CreatedAt,
+                            item.Auditable.UpdatedAt,
+                            item.Auditable.DeletedAt,
                             item.Age,
                             item.Rg.BirthDate,
                             item.Cpf.Number,
