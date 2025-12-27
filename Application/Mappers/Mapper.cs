@@ -1,4 +1,5 @@
 ﻿using Application.Commands.Persons;
+using Application.Common.Response.Auditables;
 using Application.Common.Response.Documents;
 using Application.Common.Response.Persons;
 using Domain.Entities;
@@ -32,9 +33,11 @@ namespace Application.Mappers
         {
             var cpfResponse = CreateCpfResponse(person.Cpf);
             var rgResponse = CreateRgResponse(person.Rg);
+            var auditable = CreateAuditable(person.Auditable);
 
             var personResponse = new PersonResponse(
                 person.Id,
+                auditable,
                 person.Name,
                 person.Age,
                 cpfResponse,
@@ -70,6 +73,14 @@ namespace Application.Mappers
                 rg.Number,
                 rg.BirthDate,
                 rg.IssuingAuthority);
+        }
+        
+        private static AuditableEntityResponse CreateAuditable(AuditableEntity auditable)
+        {
+            return new AuditableEntityResponse(
+                auditable.CreatedAt,
+                auditable.UpdatedAt,
+                auditable.DeletedAt);
         }
     }
 }
